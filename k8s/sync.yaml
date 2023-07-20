@@ -1,5 +1,11 @@
 
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: greymatter-sync
+  namespace: examples
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata: 
@@ -16,6 +22,8 @@ spec:
       labels:
         app: greymatter-sync
     spec:
+      serviceAccount: greymatter-sync
+      serviceAccountName: greymatter-sync
       terminationGracePeriodSeconds: 10
       imagePullSecrets:
       - name: greymatter-image-pull
@@ -25,8 +33,7 @@ spec:
           secretName: greymatter-admin-sync
       containers:
       - name: greymatter-sync
-        # image: greymatter.jfrog.io/oci/greymatter-cli:4.8.0
-        image: greymatter.jfrog.io/dev-oci/greymatter-cli:main
+        image: greymatter.jfrog.io/oci/greymatter-cli:4.8.1
         imagePullPolicy: Always
         command: ["/usr/local/bin/greymatter"]
         args: [
